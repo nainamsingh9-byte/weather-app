@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleHub | Fashion Store</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="topbar">
+        free delivery on orfers above &#8377; 999!
+    </div>
+    <header class="navbar">
+        <a href="#" class="logo">Style<spam>Hub.</spam></a>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#shop">Shop</a>
+            <a href="#shop" data-filter="Women">Women</a>
+            <a href="#shop" data-filter="Men">Men</a>
+        </nav>
+        <button class="cart-button" id="cartToggle">
+            Bag (<span id="cartCount">0</span>)
+        </button>
+    </header>
+    <main>
+        <section class="hero" id="Home">
+            <div class="hero-content">
+                <p class="eyebrow">NEW SEASON . NEW STYLE</p>
+                <h1>Wear Your<br><span>Own  Story.</span></h1>
+                <p>Discover Your style with our latest fashion collection.</p>
+                <a href="#shop"class="primary-button"> Explore collection &#8593</a>"
+            </div>
+            <div class="hero-art">
+                <div class="hero-circle"></div>
+                <img src="https://images.unsplash.com/photo-148385988355-763728e1935b?autoformat&fit=crop&w=900&q=85"
+                alt="Fashion collection">
+                <div class="hero-tag">YOUR STYLE, YOUR RULES</div>
+            </div>
+        </section>
+        <section class="shop-section" id="shop">
+            <div class="section-heading">
+            </div>
+            <p class="eyebrow">HANDPICKED FOR YOU</p>
+            <h2>Trending collection</h2>
+        </div>
+        <p>Find something you'll love</p>
+    </div>
+    <div class="shop-tools">
+        <input type="search" id="searchInput"
+        placeholder="search clothes...">
+        <div class="filters">
+            <button class="filter active"
+            data-filter="All">All</button>
+            <button class="filter"
+            data-filter="Women">Women</button>
+            <button class="filter"
+            data-filter="Men">Men</button>
+        </div>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+    <p class="empty-message" id="emptyMessage"hidden>No products found. Try another search.
+    </p>
+        </section>
+        <section class="promo">
+            <p class="eyebrow">A LITTLE SOMETHING FOR YOU</p>
+            <h2>Style that feels like you.</h2>
+            <p>Explore new looks and make them your own.</p>
+            <a href="#shop" class="primary-button">Shop Now</a>
+        </section>
+    </main>
+    <footer>
+        <a href="#" class="logo">style<span>Hub.</span></a>
+        <p>Made with for fashion lovers.</p>
+        <p>  2026 StyleHub Demo Store</p>
+    </footer>
+    <div class="cart-overlay" id="cartoverlay"></div>
+    <aside class="cart-panel" id="cartPanel"aria-label="Shopping cart">
+        <div class="cart-header">
+            <h2>Your Shopping Bag</h2>
+            <button id="closeCart" class="close-button"arial-label="Close cart"></button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="total-row">
+                <span>Total</span>
+                <strong id="cartTotal">&#8377</strong>
+            </div>
+            <p class="cart-note">Delivery charges are not included.</p>
+            <button id="checkoutButton"class="primary-button checkout">Place Demo Order
+            </button>
+        </div>
+    </aside>
+    
+</body>
+</html>
