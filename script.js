@@ -1,379 +1,120 @@
-const products = [
-    {
-        id: 1,
-        name: "Floral Summer Dress",
-        category: "Women",
-        price: 799,
-        description: "Light and comfortable",
-        image:
-            "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 2,
-        name: "Classic White Shirt",
-        category: "Men",
-        price: 599,
-        description: "Perfect for every day",
-        image:
-            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 3,
-        name: "Elegant Beige Outfit",
-        category: "Women",
-        price: 999,
-        description: "Effortless everyday style",
-        image:
-            "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 4,
-        name: "Casual Denim Jacket",
-        category: "Men",
-        price: 1199,
-        description: "A timeless wardrobe piece",
-        image:
-            "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 5,
-        name: "Chic Summer Top",
-        category: "Women",
-        price: 499,
-        description: "Easy and versatile",
-        image:
-            "https://images.unsplash.com/photo-1551163943-3f6a855d1153?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 6,
-        name: "Smart Casual Blazer",
-        category: "Men",
-        price: 1499,
-        description: "Sharp and sophisticated",
-        image:
-            "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 7,
-        name: "Everyday Casual Tee",
-        category: "Men",
-        price: 399,
-        description: "Comfort meets style",
-        image:
-            "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: 8,
-        name: "Minimal Fashion Look",
-        category: "Women",
-        price: 899,
-        description: "Modern and elegant",
-        image:
-            "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80"
-    }
-];
 
-const productGrid = document.getElementById("productGrid");
-const searchInput = document.getElementById("searchInput");
-const emptyMessage = document.getElementById("emptyMessage");
-const cartCount = document.getElementById("cartCount");
-const cartItems = document.getElementById("cartItems");
-const cartTotal = document.getElementById("cartTotal");
+const cityInput = document.getElementById("cityInput");
+const searchBtn = document.getElementById("searchBtn");
 
-let activeCategory = "All";
-let cart = [];
+const message = document.getElementById("message");
+const cityName = document.getElementById("cityName");
+const temperature = document.getElementById("temperature");
+const condition = document.getElementById("condition");
+const humidity = document.getElementById("humidity");
+const wind = document.getElementById("wind");
+const weatherIcon = document.getElementById("weatherIcon");
 
-// Format price in Indian Rupees
-function money(amount) {
-    return "₹" + amount.toLocaleString("en-IN");
-}
+// City ke naam se uski location khojna
+async function getWeather() {
+    const city = cityInput.value.trim();
 
-// Display products
-function showProducts() {
-    const query = (searchInput?.value || "")
-        .trim()
-        .toLowerCase();
-
-    const filtered = products.filter(product => {
-        const matchesCategory =
-            activeCategory === "All" ||
-            product.category === activeCategory;
-
-        const matchesSearch =
-            product.name.toLowerCase().includes(query) ||
-            product.category.toLowerCase().includes(query);
-
-        return matchesCategory && matchesSearch;
-    });
-
-    productGrid.innerHTML = filtered.map(product => `
-        <article class="product-card">
-
-            <div class="product-image">
-                <img
-                    src="${product.image}"
-                    alt="${product.name}"
-                    loading="lazy">
-
-                <span class="product-category">
-                    ${product.category}
-                </span>
-            </div>
-
-            <div class="product-info">
-                <h3>${product.name}</h3>
-
-                <p class="description">
-                    ${product.description}
-                </p>
-
-                <div class="product-bottom">
-                    <span class="price">
-                        ${money(product.price)}
-                    </span>
-
-                    <button
-                        class="add-button"
-                        data-add="${product.id}"
-                    >
-                        + Add to Cart
-                    </button>
-                </div>
-            </div>
-
-        </article>
-    `).join("");
-
-    emptyMessage.hidden = filtered.length !== 0;
-}
-
-// Add product to cart
-function addToCart(id) {
-    const existing = cart.find(item => item.id === id);
-
-    if (existing) {
-        existing.quantity++;
-    } else {
-        cart.push({
-            id: id,
-            quantity: 1
-        });
-    }
-
-    showCart();
-}
-
-// Remove product completely from cart
-function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
-    showCart();
-}
-
-// Increase or decrease product quantity
-function changeQuantity(id, change) {
-    const item = cart.find(item => item.id === id);
-    if (!item) return;
-    item.quantity += change;
-    if (item.quantity <= 0) {
-        removeFromCart(id);
-    } else {
-        showCart();
-    }
-}
-
-// Display cart items and total price
-function showCart() {
-    const count = cart.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-    );
-
-    const total = cart.reduce((sum, item) => {
-        const product = products.find(p => p.id === item.id);
-
-        return sum + product.price * item.quantity;
-    }, 0);
-
-    cartCount.textContent = count;
-    cartTotal.textContent = money(total);
-
-    if (cart.length === 0) {
-        cartItems.innerHTML = `
-            <div class="cart-empty">
-                <p style="font-size: 35px;">🛍️</p>
-                <p>Your bag is empty.</p>
-                <p>Add something you love!</p>
-            </div>
-        `;
-
+    if (city === "") {
+        message.textContent = "Please enter a city name!";
         return;
     }
 
-    cartItems.innerHTML = cart.map(item => {
-        const product = products.find(p => p.id === item.id);
+    message.textContent = "Weather loading...";
+    searchBtn.disabled = true;
 
-        return `
-            <div class="cart-item">
+    try {
+        const cityURL =
+            "https://geocoding-api.open-meteo.com/v1/search?name=" +
+            encodeURIComponent(city) +
+            "&count=1&language=en&format=json";
 
-                <img
-                    src="${product.image}"
-                    alt="${product.name}"
-                >
+        const cityResponse = await fetch(cityURL);
+        if (!cityResponse.ok) throw new Error("City search failed");
 
-                <div>
-                    <h3>${product.name}</h3>
+        const cityData = await cityResponse.json();
 
-                    <p>
-                        ${money(product.price * item.quantity)}
-                    </p>
-
-                    <div class="quantity-controls">
-
-                        <button
-                            data-minus="${item.id}"
-                            aria-label="Decrease quantity"
-                        >
-                            −
-                        </button>
-
-                        <span>${item.quantity}</span>
-
-                        <button
-                            data-plus="${item.id}"
-                            aria-label="Increase quantity"
-                        >
-                            +
-                        </button>
-
-                        <button
-                            class="remove-button"
-                            data-remove="${item.id}"
-                        >
-                            Remove
-                        </button>
-
-                    </div>
-                </div>
-
-            </div>
-        `;
-    }).join("");
-}
-
-// Open cart
-function openCart() {
-    document.body.classList.add("cart-open");
-}
-
-// Close cart
-function closeCart() {
-    document.body.classList.remove("cart-open");
-}
-
-// Add-to-cart button event
-productGrid.addEventListener("click", event => {
-    const button = event.target.closest("[data-add]");
-
-    if (button) {
-        addToCart(Number(button.dataset.add));
-    }
-});
-
-// Cart quantity and remove button events
-cartItems.addEventListener("click", event => {
-    const minus = event.target.closest("[data-minus]");
-    const plus = event.target.closest("[data-plus]");
-    const remove = event.target.closest("[data-remove]");
-
-    if (minus) {
-        changeQuantity(Number(minus.dataset.minus), -1);
-    }
-
-    if (plus) {
-        changeQuantity(Number(plus.dataset.plus), 1);
-    }
-
-    if (remove) {
-        removeFromCart(Number(remove.dataset.remove));
-    }
-});
-
-// Search products
-searchInput.addEventListener("input", showProducts);
-
-// Category filter buttons
-document.querySelectorAll(".filter").forEach(button => {
-    button.addEventListener("click", () => {
-        activeCategory = button.dataset.filter;
-
-        document.querySelectorAll(".filter").forEach(filter => {
-            filter.classList.toggle(
-                "active",
-                filter === button
-            );
-        });
-
-        showProducts();
-    });
-});
-
-// Navigation category links
-document.querySelectorAll("nav [data-filter]").forEach(link => {
-    link.addEventListener("click", () => {
-        activeCategory = link.dataset.filter;
-
-        document.querySelectorAll(".filter").forEach(button => {
-            button.classList.toggle(
-                "active",
-                button.dataset.filter === activeCategory
-            );
-        });
-
-        showProducts();
-    });
-});
-
-// Open cart button
-document.getElementById("cartToggle")
-    .addEventListener("click", openCart);
-
-// Close cart button
-document.getElementById("closeCart")
-    .addEventListener("click", closeCart);
-
-// Close cart by clicking overlay
-document.getElementById("cartOverlay")
-    ?.addEventListener("click", closeCart);
-
-// Checkout button
-document.getElementById("checkoutButton")
-    .addEventListener("click", () => {
-        if (cart.length === 0) {
-            alert(
-                "Your cart is empty! Please add a product first."
-            );
-
+        if (!cityData.results || cityData.results.length === 0) {
+            message.textContent = "City nahi mili. Naam check karo!";
             return;
         }
 
-        const total = cart.reduce((sum, item) => {
-            const product = products.find(p => p.id === item.id);
+        const place = cityData.results[0];
 
-            return sum + product.price * item.quantity;
-        }, 0);
+        // Location ke coordinates se weather lana
+        const weatherURL =
+            "https://api.open-meteo.com/v1/forecast" +
+            "?latitude=" + place.latitude +
+            "&longitude=" + place.longitude +
+            "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m" +
+            "&timezone=auto";
 
-        alert(
-            "Demo order successful!\n" +
-            "Total: " + money(total) +
-            "\nThis is a demo only. No payment was taken."
+        const weatherResponse = await fetch(weatherURL);
+        if (!weatherResponse.ok) throw new Error("Weather request failed");
+
+        const weatherData = await weatherResponse.json();
+        const current = weatherData.current;
+
+        cityName.textContent = place.name +
+            (place.country ? ", " + place.country : "");
+
+        temperature.textContent =
+            Math.round(current.temperature_2m) + "°C";
+
+        humidity.textContent =
+            current.relative_humidity_2m + "%";
+
+        wind.textContent =
+            current.wind_speed_10m + " km/h";
+
+        condition.textContent = getCondition(current.weather_code);
+        weatherIcon.textContent = getIcon(
+            current.weather_code,
+            current.is_day
         );
 
-        cart = [];
+        message.textContent = "Weather updated successfully!";
 
-        showCart();
-        closeCart();
-    });
+    } catch (error) {
+        message.textContent =
+            "Weather load nahi hua. Internet check karke dobara try karo.";
+        console.error(error);
+    } finally {
+        searchBtn.disabled = false;
+    }
+}
 
-// Initial display
-showProducts();
-showCart();
+// Weather code ko readable condition banana
+function getCondition(code) {
+    if (code === 0) return "Clear sky";
+    if ([1, 2, 3].includes(code)) return "Partly cloudy";
+    if ([45, 48].includes(code)) return "Foggy";
+    if ([51, 53, 55, 56, 57].includes(code)) return "Drizzle";
+    if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) {
+        return "Rainy";
+    }
+    if ([71, 73, 75, 77, 85, 86].includes(code)) return "Snowy";
+    if ([95, 96, 99].includes(code)) return "Thunderstorm";
+    return "Weather information available";
+}
+
+// Weather ke hisaab se emoji
+function getIcon(code, isDay) {
+    if (code === 0) return isDay ? "☀️" : "🌙";
+    if ([1, 2, 3].includes(code)) return "⛅";
+    if ([45, 48].includes(code)) return "🌫️";
+    if ([51, 53, 55, 56, 57].includes(code)) return "🌦️";
+    if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) {
+        return "🌧️";
+    }
+    if ([71, 73, 75, 77, 85, 86].includes(code)) return "❄️";
+    if ([95, 96, 99].includes(code)) return "⛈️";
+    return "🌤️";
+}
+
+searchBtn.addEventListener("click", getWeather);
+
+cityInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        getWeather();
+    }
+});
